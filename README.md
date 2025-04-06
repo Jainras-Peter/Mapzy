@@ -1,6 +1,6 @@
 # 🗺️Mapze
 
-** Mapze** is a web application built with **Node.js**, **Express**, **MongoDB**, and **EJS** that helps tourists discover and share places. Users can add details about locations, including photos, descriptions, price, and more. Other users can rate and review those places, making it easier for travelers to plan trips.
+**Mapze** is a web application built with **Node.js**, **Express**, **MongoDB**, and **EJS** that helps tourists discover and share places. Users can add details about locations, including photos, descriptions, price, and more. Other users can rate and review those places, making it easier for travelers to plan trips.
 
 ---
 
@@ -36,31 +36,35 @@
 
 ## Installation
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/profile-mapze.git
-cd profile-mapze
+ # 1. Clone the repository
+    
+
+      git clone https://github.com/Jainras-Peter/Mapze.git
+    
 
 
-# 2. Install dependencies
-npm install
+  # 2. Install dependencies
+    npm install
 
 # 3. Setup Environment Variables
-# Create a .env file and add the following:
-DB_URL=your_mongo_connection_string
-CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-CLOUDINARY_KEY=your_cloudinary_api_key
-CLOUDINARY_SECRET=your_cloudinary_secret
-MAPTILER_API_KEY=your_maptiler_api_key
-SECRET=your_session_secret
+    # Create a .env file and add the following:
+    DB_URL=your_mongo_connection_string
+    CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+    CLOUDINARY_KEY=your_cloudinary_api_key
+    CLOUDINARY_SECRET=your_cloudinary_secret
+    MAPTILER_API_KEY=your_maptiler_api_key
+    SECRET=your_session_secret
 
 # 4. Run the development server
-npm start
+    npm start
 
 # 5. Open in browser
-http://localhost:3000
-‘bash
-##License
+    http://localhost:3000
+
+# Deployment Link
+    https://mapzy.onrender.com
+
+# License
 
 This project is open-source and available under the MIT License.
 
