@@ -61,8 +61,14 @@
 # 5. Open in browser
     http://localhost:3000
 
-# Deployment Link
-    https://mapzy.onrender.com
+---
+
+## Deployment
+
+You can access the live app here:  
+**[Mapze - Live Site](https://mapzy.onrender.com)**
+
+---
 
 # License
 
