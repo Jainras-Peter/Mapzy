@@ -1,6 +1,6 @@
 # 🗺️Mapzy
 
-**Mapze** is a web application built with **Node.js**, **Express**, **MongoDB**, and **EJS** that helps tourists discover and share places. Users can add details about locations, including photos, descriptions, price, and more. Other users can rate and review those places, making it easier for travelers to plan trips.
+**Mapzy** is a web application built with **Node.js**, **Express**, **MongoDB**, and **EJS** that helps tourists discover and share places. Users can add details about locations, including photos, descriptions, price, and more. Other users can rate and review those places, making it easier for travelers to plan trips.
 
 ---
 
