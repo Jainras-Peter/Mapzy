@@ -11,6 +11,7 @@ const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const passport = require('passport');
+const GoogleStrategy=require("passport-google-oauth20").Strategy;
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const helmet = require('helmet');
@@ -22,7 +23,7 @@ const reviewRoutes = require('./routes/reviews');
 
 const MongoDBStore = require("connect-mongo")(session);
 
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/placify';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/mapzy';
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -84,29 +85,21 @@ app.use(helmet());
 
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
-    // "https://api.tiles.mapbox.com/",
-    // "https://api.mapbox.com/",
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/", // add this
+    "https://cdn.maptiler.com/", 
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
     "https://stackpath.bootstrapcdn.com/",
-    // "https://api.mapbox.com/",
-    // "https://api.tiles.mapbox.com/",
     "https://fonts.googleapis.com/",
     "https://use.fontawesome.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/", // add this
+    "https://cdn.maptiler.com/", 
 ];
 const connectSrcUrls = [
-    // "https://api.mapbox.com/",
-    // "https://a.tiles.mapbox.com/",
-    // "https://b.tiles.mapbox.com/",
-    // "https://events.mapbox.com/",
-    "https://api.maptiler.com/", // add this
+    "https://api.maptiler.com/", 
 ];
 const fontSrcUrls = [];
 app.use(
@@ -136,6 +129,50 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
+//Googgel Auth
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        let user = await User.findOne({ googleId: profile.id });
+        if (!user) {
+            user = await User.findOne({ email: profile.emails[0].value });
+            if (user) {
+                user.googleId = profile.id;
+                await user.save();
+            } else {
+                let username;
+                let unique=false;
+                while(!unique){
+                    const random=Math.floor(Math.random()*10000);//Random number between 0-9999
+                    const tusername=`user${random}`;
+                    const check=await User.findOne({username:tusername});
+                    if(!check){
+                        username=tusername;
+                        unique=true;
+                    }
+                }
+                user = new User({
+                    username:username,
+                    email: profile.emails[0].value,
+                    googleId: profile.id,
+                });
+                
+                await user.save();
+            }
+        }
+
+        return done(null, user);
+    } catch (err) {
+        return done(err, null);
+    }
+}));
+
+
+
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -156,6 +193,23 @@ app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.get('/', (req, res) => {
     res.render('home')
 });
+
+//Google Auth Routes
+app.get("/auth/google", passport.authenticate("google", {
+    access_type: "offline",
+    scope: ["profile", "email"]
+}));
+
+app.get("/auth/google/callback",
+    passport.authenticate("google", {
+        failureRedirect: "/login",
+        failureFlash: true
+    }),
+    (req, res) => {
+        req.flash("success", "Welcome to Mapzy!");
+        res.redirect("/campgrounds");
+    }
+);
 
 
 app.all('*', (req, res, next) => {
