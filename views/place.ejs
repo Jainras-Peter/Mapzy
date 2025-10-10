@@ -1,0 +1,45 @@
+<% layout('layouts/boilerplate')%>
+<style>
+  .search { width: 90%; }
+  @media (min-width: 768px) { .search { width: 70%; } }
+  @media (min-width: 992px) { .search { width: 50%; } }
+  .thumb-fixed { height: 190px; object-fit: cover; }
+</style>
+
+<div class="container py-4">
+  <h2 class="mb-4 text-center">🌍 Explore Tourist Attractions <%= city ? 'in ' + city : '' %></h2>
+
+  <form class="d-flex mx-auto search" style="margin-bottom:15px;" action="/places/search" method="GET">
+    <input class="form-control me-1" type="search" name="city" placeholder="Search by city..." aria-label="Search" value="<%= city || '' %>" required>
+    <button class="btn btn-outline-dark d-flex align-items-center justify-content-center" style="margin-left:10px;" type="submit" aria-label="Search">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85z"/>
+        <path d="M6.5 12a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z" />
+      </svg>
+    </button>
+  </form>
+
+  <% if (message) { %>
+    <div class="alert alert-warning text-center"><%= message %></div>
+  <% } %>
+
+  <div class="row">
+    <% places.forEach(place => { %>
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <% if (place.thumbnail) { %>
+            <img src="<%= place.thumbnail %>" class="card-img-top thumb-fixed" alt="<%= place.name %>">
+          <% } %>
+          <div class="card-body">
+            <h5 class="card-title"><%= place.name %></h5>
+            <p class="card-text mb-2">
+              <strong>Category:</strong> <%= place.category || 'N/A' %><br>
+              <strong>Rating:</strong> ⭐ <%= place.rating || 'N/A' %> (<%= place.reviews || 0 %> reviews)
+            </p>
+            <p class="card-text"><strong>Address:</strong> <%= place.address || 'Not Available' %></p>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>

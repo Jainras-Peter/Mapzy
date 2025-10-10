@@ -23,6 +23,8 @@ const reviewRoutes = require('./routes/reviews');
 
 const MongoDBStore = require("connect-mongo")(session);
 
+const placeRoutes = require('./routes/place');
+
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/mapzy';
 
 mongoose.connect(dbUrl, {
@@ -118,7 +120,10 @@ app.use(
                 "data:",
                 "https://res.cloudinary.com/dvqaecafo/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
                 "https://images.unsplash.com/",
-                "https://api.maptiler.com/"
+                "https://api.maptiler.com/",
+                "https://lh5.googleusercontent.com/",
+                "https://lh3.googleusercontent.com/",
+                "https://maps.gstatic.com/"
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
@@ -189,6 +194,7 @@ app.use((req, res, next) => {
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
+app.use('/places', placeRoutes);
 
 
 app.get('/', (req, res) => {
@@ -199,6 +205,7 @@ app.get('/', (req, res) => {
 app.get("/auth/google", passport.authenticate("google", {
     access_type: "offline",
     scope: ["profile", "email"]
+
 }));
 
 app.get("/auth/google/callback",

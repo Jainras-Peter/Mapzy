@@ -10,6 +10,7 @@
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/campgrounds">Places</a>
                 <a class="nav-link" href="/campgrounds/new">Add Place</a>
+                <a class="nav-link" href="/places">Explore More</a>
             </div>
             <div class="navbar-nav ml-auto">
                 <% if(!currentUser) {%>
@@ -17,7 +18,7 @@
                 <a class="nav-link" href="/register">Register</a>
                 <% } else {%>
                 <div class="d-flex align-items-center">
-                        <a class="nav-link p-0" href="/<%= currentUser.username %>/profile"">
+                        <a class="nav-link p-0" href="/<%= currentUser.username %>/profile">
                             <img src="/images/user.png" alt="" class="rounded-circle me-2" width="30" height="30">Profile
                         </a>
                 </div>
