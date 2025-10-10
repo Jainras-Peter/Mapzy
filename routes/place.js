@@ -20,7 +20,8 @@ router.get("/search", (req, res) => {
 
 // Fetch tourist places for a given city
 router.get("/:city", async (req, res) => {
-  const city = req.params.city;
+  const city = req.params.city.toLowerCase();
+  
 
   try {
     // Check cached data first

@@ -118,7 +118,7 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/dvqaecafo/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://res.cloudinary.com/dvqaecafo/",  
                 "https://images.unsplash.com/",
                 "https://api.maptiler.com/",
                 "https://lh5.googleusercontent.com/",
@@ -152,7 +152,7 @@ passport.use(new GoogleStrategy({
                 let username;
                 let unique=false;
                 while(!unique){
-                    const random=Math.floor(Math.random()*10000);//Random number between 0-9999
+                    const random=Math.floor(Math.random()*10000);
                     const tusername=`user${random}`;
                     const check=await User.findOne({username:tusername});
                     if(!check){
@@ -185,8 +185,8 @@ passport.deserializeUser(User.deserializeUser());
 //flash Middleware to display flash message
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
-    res.locals.success = req.flash('success');  //for display success msg
-    res.locals.error = req.flash('error');      //for displau error msg
+    res.locals.success = req.flash('success');  
+    res.locals.error = req.flash('error');      
     next();
 })
 
