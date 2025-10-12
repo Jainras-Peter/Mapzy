@@ -135,6 +135,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
+//Rate limiting
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per window
+    standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
+    legacyHeaders: false, // Disable the old `X-RateLimit-*` headers
+    message: "Too many requests from this IP, please try again later."
+});
+
+app.use(limiter);
+
 //Googgel Auth
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
