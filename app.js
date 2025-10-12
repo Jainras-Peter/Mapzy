@@ -20,6 +20,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
+const tripPlannerRoutes = require('./routes/tripPlanner');
 
 const MongoDBStore = require("connect-mongo")(session);
 
@@ -208,6 +209,7 @@ app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.use('/places', placeRoutes);
+app.use('/trip-planner', tripPlannerRoutes);
 
 
 app.get('/', (req, res) => {

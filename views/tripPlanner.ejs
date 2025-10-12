@@ -1,0 +1,109 @@
+<% layout('layouts/boilerplate')%>
+
+<style>
+  .feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 15px;
+  }
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  .coming-soon-badge {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 0.9em;
+    display: inline-block;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 0;
+    margin-bottom: 40px;
+  }
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
+  .notify-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 40px;
+  }
+</style>
+
+<div class="hero-section">
+  <div class="container text-center">
+    <h1 class="display-4 mb-3">🗺️ Trip Planner</h1>
+    <p class="lead">Plan your perfect journey with comprehensive travel solutions</p>
+    <div class="coming-soon-badge">🚀 Coming Soon</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-center mb-5">What You'll Be Able To Do</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <% features.forEach(feature => { %>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card feature-card h-100 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="feature-icon"><%= feature.icon %></div>
+          <h5 class="card-title"><%= feature.title %></h5>
+          <p class="card-text text-muted"><%= feature.description %></p>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+
+  <div class="notify-section">
+    <div class="row align-items-center">
+        <small class="d-block text-muted mt-2">Feature coming soon</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card border-info">
+        <div class="card-body text-center">
+          <h5 class="card-title text-info">🎯 Planned Features</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-unstyled text-start">
+                <li> Multi-city trip planning</li>
+                <li> Real-time transport schedules</li>
+                <li> Hotel price comparison</li>
+                <li> Weather integration</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-unstyled text-start">
+                <li>Budget tracking</li>
+                <li> Itinerary sharing</li>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
