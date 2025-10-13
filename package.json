@@ -1,11 +1,12 @@
 {
-  "name": "yelpcamp",
+  "name": "mapzy",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A travel and places discovery platform with trip planning features",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
