@@ -135,7 +135,7 @@
             </div>
             <div class="col-md-3">
               <label for="tp-destination" class="form-label">Destination</label>
-              <input id="tp-destination" class="form-control" type="text" placeholder="e.g., Bengaluru" value="Chennai">
+              <input id="tp-destination" class="form-control" type="text" placeholder="e.g., Bengaluru" value="Madurai">
             </div>
             <div class="col-md-3">
               <label for="tp-start" class="form-label">Start Date & Time</label>
@@ -146,6 +146,7 @@
               <input id="tp-end" class="form-control" type="datetime-local">
             </div>
           </div>
+          <div id="tp-errors" class="text-danger small mt-2" aria-live="polite"></div>
 
           <div class="d-flex flex-wrap gap-2 mt-3">
             <button id="tp-find-transport" class="btn btn-outline-primary">Find Transport</button>
@@ -183,7 +184,10 @@
             <div class="col-md-7">
               <h5 class="mb-3">🧭 Timeline Preview</h5>
               <div id="tp-timeline" class="timeline"></div>
-              <button id="tp-build-timeline" class="btn btn-success mt-3">Build Timeline</button>
+              <div class="d-flex gap-2 mt-3">
+                <button id="tp-build-timeline" class="btn btn-success">Build Timeline</button>
+                <button id="tp-reset" class="btn btn-outline-danger">Delete</button>
+              </div>
             </div>
           </div>
         </div>
@@ -392,34 +396,84 @@
       const inputDest = el('#tp-destination');
       const inputStart = el('#tp-start');
       const inputEnd = el('#tp-end');
+      const errorBox = el('#tp-errors');
       const now = new Date();
       const isoNow = new Date(now.getTime() + 60*60*1000).toISOString().slice(0,16);
       const isoLater = new Date(now.getTime() + 48*60*60*1000).toISOString().slice(0,16);
       inputStart.value = isoNow;
       inputEnd.value = isoLater;
 
-      inputOrigin.addEventListener('input', (e) => state.origin = e.target.value);
-      inputDest.addEventListener('input', (e) => state.destination = e.target.value);
+      function validateBasics() {
+        errorBox.textContent = '';
+        const origin = (inputOrigin.value || '').trim();
+        const dest = (inputDest.value || '').trim();
+        if (!origin || !dest) {
+          errorBox.textContent = 'Please enter both your location and destination.';
+          return false;
+        }
+        if (origin.toLowerCase() === dest.toLowerCase()) {
+          errorBox.textContent = 'Your Location and Destination must be different.';
+          return false;
+        }
+        const start = new Date(inputStart.value);
+        const end = new Date(inputEnd.value);
+        if (!(start instanceof Date) || isNaN(start.getTime()) || !(end instanceof Date) || isNaN(end.getTime())) {
+          errorBox.textContent = 'Please select valid start and end date/time.';
+          return false;
+        }
+        if (end.getTime() <= start.getTime()) {
+          errorBox.textContent = 'End date/time must be after start date/time.';
+          return false;
+        }
+        state.origin = origin;
+        state.destination = dest;
+        state.start = inputStart.value;
+        state.end = inputEnd.value;
+        return true;
+      }
+
+      inputOrigin.addEventListener('input', () => validateBasics());
+      inputDest.addEventListener('input', () => validateBasics());
+      inputStart.addEventListener('change', () => validateBasics());
+      inputEnd.addEventListener('change', () => validateBasics());
       inputStart.addEventListener('change', (e) => state.start = e.target.value);
       inputEnd.addEventListener('change', (e) => state.end = e.target.value);
 
       el('#tp-find-transport').addEventListener('click', () => {
+        if (!validateBasics()) return;
         const items = mockTransport(state.destination, inputStart.value);
         state.transport = items;
         list(el('#tp-transport-list'), items, transportItem);
       });
       el('#tp-find-hostels').addEventListener('click', () => {
+        if (!validateBasics()) return;
         const arrive = (state.transport[0]?.arrive) || inputStart.value;
         const items = mockHostels(state.destination, arrive);
         state.hostels = items;
         list(el('#tp-hostel-list'), items, hostelItem);
       });
       el('#tp-find-return').addEventListener('click', () => {
+        if (!validateBasics()) return;
         const items = mockReturnOptions(state.destination, inputEnd.value);
         state.returns = items;
         list(el('#tp-return-list'), items, returnItem);
       });
-      el('#tp-build-timeline').addEventListener('click', buildTimeline);
+      el('#tp-build-timeline').addEventListener('click', () => { if (validateBasics()) buildTimeline(); });
+      el('#tp-reset').addEventListener('click', () => {
+        // Clear state
+        state.transport = [];
+        state.hostels = [];
+        state.returns = [];
+        state.cart = { transport: null, hostel: null, ret: null };
+        // Clear UI
+        el('#tp-transport-list').innerHTML = '';
+        el('#tp-hostel-list').innerHTML = '';
+        el('#tp-return-list').innerHTML = '';
+        el('#tp-cart').innerHTML = '';
+        el('#tp-total').textContent = '₹0';
+        el('#tp-timeline').innerHTML = '';
+        errorBox.textContent = '';
+      });
     });
   </script>
   <div class="notify-section">
